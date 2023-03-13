@@ -1,4 +1,4 @@
-package gomailv2
+package gomail
 
 import (
 	"log"

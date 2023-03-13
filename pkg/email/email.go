@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"os"
 
-	"github.com/marceloamoreno87/gomail/pkg/gomailv2"
+	"github.com/marceloamoreno87/gomail/pkg/gomail"
 	"github.com/marceloamoreno87/gomail/pkg/sendgrid"
 	"github.com/marceloamoreno87/gomail/pkg/ses"
 )
@@ -33,13 +33,13 @@ func Send(message_body []byte) {
 	mailmessage := setMailMessage(message_body)
 	switch os.Getenv("MAIL_DRIVER") {
 	case "gomail":
-		gomailv2.Send(mailmessage.GetFrom(), mailmessage.GetTo(), mailmessage.GetCc(), mailmessage.GetSubject(), mailmessage.GetBody())
+		gomail.Send(mailmessage.GetFrom(), mailmessage.GetTo(), mailmessage.GetCc(), mailmessage.GetSubject(), mailmessage.GetBody())
 	case "sendgrid":
 		sendgrid.Send(mailmessage.GetFrom(), mailmessage.GetTo(), mailmessage.GetCc(), mailmessage.GetSubject(), mailmessage.GetBody())
 	case "ses":
 		ses.Send(mailmessage.GetFrom(), mailmessage.GetTo(), mailmessage.GetCc(), mailmessage.GetSubject(), mailmessage.GetBody())
 	default:
-		gomailv2.Send(mailmessage.GetFrom(), mailmessage.GetTo(), mailmessage.GetCc(), mailmessage.GetSubject(), mailmessage.GetBody())
+		gomail.Send(mailmessage.GetFrom(), mailmessage.GetTo(), mailmessage.GetCc(), mailmessage.GetSubject(), mailmessage.GetBody())
 	}
 }
 
