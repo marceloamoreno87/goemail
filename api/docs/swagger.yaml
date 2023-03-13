@@ -1,4 +1,31 @@
 basePath: /api
+definitions:
+  email.MailMessage:
+    properties:
+      body:
+        example: <h1>Hello, world!</h1>
+        type: string
+      cc:
+        example:
+        - test@test.com
+        - ' test2@test2.com'
+        items:
+          type: string
+        type: array
+      from:
+        example: marceloamoreno87@gmail.com
+        type: string
+      subject:
+        example: testing
+        type: string
+      to:
+        example:
+        - test@test.com
+        - ' test2@test2.com'
+        items:
+          type: string
+        type: array
+    type: object
 host: localhost:8080
 info:
   contact:
@@ -12,11 +39,12 @@ paths:
     post:
       description: Send email by HTML template
       parameters:
-      - description: Type the cpf of the user who wants to get the benefits
-        in: query
+      - description: query params
+        in: body
         name: doc
         required: true
-        type: string
+        schema:
+          $ref: '#/definitions/email.MailMessage'
       produces:
       - application/json
       responses: {}

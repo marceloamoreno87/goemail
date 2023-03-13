@@ -8,11 +8,11 @@ import (
 	"github.com/marceloamoreno87/gomail/pkg/rabbitmq"
 )
 
-// GetBenfitByDoc             godoc
+// SendEmail             godoc
 // @Summary      Send email by HTML template
 // @Description  Send email by HTML template
 // @Tags         Send email
-// @Param        doc  query      string  true  "Type the cpf of the user who wants to get the benefits"
+// @Param        doc  body  email.MailMessage  true  "query params"
 // @Produce      json
 // @Router       /send-email [post]
 func SendEmail(c *gin.Context) {

@@ -24,14 +24,55 @@
                 "summary": "Send email by HTML template",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "Type the cpf of the user who wants to get the benefits",
+                        "description": "query params",
                         "name": "doc",
-                        "in": "query",
-                        "required": true
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/email.MailMessage"
+                        }
                     }
                 ],
                 "responses": {}
+            }
+        }
+    },
+    "definitions": {
+        "email.MailMessage": {
+            "type": "object",
+            "properties": {
+                "body": {
+                    "type": "string",
+                    "example": "\u003ch1\u003eHello, world!\u003c/h1\u003e"
+                },
+                "cc": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "test@test.com",
+                        " test2@test2.com"
+                    ]
+                },
+                "from": {
+                    "type": "string",
+                    "example": "marceloamoreno87@gmail.com"
+                },
+                "subject": {
+                    "type": "string",
+                    "example": "testing"
+                },
+                "to": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "test@test.com",
+                        " test2@test2.com"
+                    ]
+                }
             }
         }
     }

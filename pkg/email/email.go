@@ -10,11 +10,11 @@ import (
 )
 
 type MailMessage struct {
-	To      []string `json:"to"`
-	Cc      []string `json:"cc"`
-	Subject string   `json:"subject"`
-	From    string   `json:"from"`
-	Body    string   `json:"body"`
+	To      []string `json:"to" example:"test@test.com, test2@test2.com"`
+	Cc      []string `json:"cc" example:"test@test.com, test2@test2.com"`
+	Subject string   `json:"subject" example:"testing"`
+	From    string   `json:"from" example:"marceloamoreno87@gmail.com"`
+	Body    string   `json:"body" example:"<h1>Hello, world!</h1>"`
 }
 
 func setMailMessage(message_body []byte) *MailMessage {
