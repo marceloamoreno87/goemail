@@ -7,15 +7,7 @@ import (
 )
 
 func main() {
-	godotenv.Load("../../.env")
-	// publish()
+	godotenv.Load()
 	config := rabbitmq.GetConfig()
 	rabbitmq.Consume(config, email.Send)
-}
-
-// Just for mocking
-func publish() {
-	for {
-		rabbitmq.Publish()
-	}
 }

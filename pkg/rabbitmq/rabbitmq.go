@@ -1,23 +1,23 @@
 package rabbitmq
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 	"strconv"
 
-	"github.com/marceloamoreno87/gomail/pkg/email"
 	"github.com/streadway/amqp"
 )
 
 type Config struct {
-	Queue     string
-	Consumer  string
-	AutoAck   bool
-	Exclusive bool
-	NoLocal   bool
-	NoWait    bool
-	Args      amqp.Table
+	Queue      string
+	Consumer   string
+	AutoAck    bool
+	Exclusive  bool
+	NoLocal    bool
+	NoWait     bool
+	Durable    bool
+	AutoDelete bool
+	Args       amqp.Table
 }
 
 func GetConfig() *Config {
@@ -25,14 +25,18 @@ func GetConfig() *Config {
 	exclusive, _ := strconv.ParseBool(os.Getenv("AMQP_EXCLUSIVE"))
 	nolocal, _ := strconv.ParseBool(os.Getenv("AMQP_NOLOCAL"))
 	nowait, _ := strconv.ParseBool(os.Getenv("AMQP_NOWAIT"))
+	durable, _ := strconv.ParseBool(os.Getenv("AMQP_DURABLE"))
+	autodelete, _ := strconv.ParseBool(os.Getenv("AMQP_AUTODELETE"))
 	config := Config{
-		Queue:     os.Getenv("AMQP_QUEUE"),
-		Consumer:  os.Getenv("AMQP_CONSUMER"),
-		AutoAck:   autoack,
-		Exclusive: exclusive,
-		NoLocal:   nolocal,
-		NoWait:    nowait,
-		Args:      nil,
+		Queue:      os.Getenv("AMQP_QUEUE"),
+		Consumer:   os.Getenv("AMQP_CONSUMER"),
+		AutoAck:    autoack,
+		Exclusive:  exclusive,
+		NoLocal:    nolocal,
+		NoWait:     nowait,
+		Durable:    durable,
+		AutoDelete: autodelete,
+		Args:       nil,
 	}
 	return &config
 }
@@ -41,6 +45,7 @@ func Consume(config *Config, f func(message_body []byte)) {
 
 	connection := getConnection()
 	channel := getChannel(connection)
+	declareQueue(config, channel)
 	msgs := getMessages(config, channel)
 
 	defer connection.Close()
@@ -58,35 +63,14 @@ func Consume(config *Config, f func(message_body []byte)) {
 	<-forever
 }
 
-func Publish() {
-
-	mock := email.MailMessage{
-		Params:  []string{"1", "2", "3"},
-		To:      []string{"to@to.com.br", "robin@robin.com.br"},
-		Cc:      []string{"cc@cc.com.br", "batman@batman.com.br"},
-		Subject: "Testando",
-		From:    "lal@teste.com.br",
-		Body:    "lalala",
-	}
-
-	json_data, err := json.Marshal(mock)
+func Publish(json_data []byte) {
 
 	connection := getConnection()
 	channel := getChannel(connection)
+	config := GetConfig()
+	declareQueue(config, channel)
 
-	queue, err := channel.QueueDeclare(
-		"mail_messages",
-		false,
-		false,
-		false,
-		false,
-		nil,
-	)
-	if err != nil {
-		panic(err)
-	}
-
-	err = channel.Publish(
+	err := channel.Publish(
 		"",
 		"mail_messages",
 		false,
@@ -99,9 +83,6 @@ func Publish() {
 	if err != nil {
 		panic(err)
 	}
-
-	fmt.Println("Queue status:", queue)
-	fmt.Println("Successfully published message")
 }
 
 func getConnection() (connection *amqp.Connection) {
@@ -133,5 +114,21 @@ func getMessages(config *Config, channel *amqp.Channel) (msgs <-chan amqp.Delive
 	if err != nil {
 		panic(err)
 	}
+	return
+}
+
+func declareQueue(config *Config, channel *amqp.Channel) (queue amqp.Queue, err error) {
+	queue, err = channel.QueueDeclare(
+		config.Queue,
+		config.Durable,
+		config.AutoDelete,
+		config.Exclusive,
+		config.NoWait,
+		config.Args,
+	)
+	if err != nil {
+		panic(err)
+	}
+
 	return
 }

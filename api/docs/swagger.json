@@ -1,0 +1,38 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Serviço de API para enviar email.",
+        "title": "GOMAIL",
+        "contact": {
+            "name": "Marcelo Moreno",
+            "email": "marceloamoreno87@gmail.com"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/api",
+    "paths": {
+        "/send-email": {
+            "post": {
+                "description": "Send email by HTML template",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Send email"
+                ],
+                "summary": "Send email by HTML template",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Type the cpf of the user who wants to get the benefits",
+                        "name": "doc",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        }
+    }
+}

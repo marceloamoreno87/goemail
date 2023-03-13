@@ -1,0 +1,26 @@
+basePath: /api
+host: localhost:8080
+info:
+  contact:
+    email: marceloamoreno87@gmail.com
+    name: Marcelo Moreno
+  description: Serviço de API para enviar email.
+  title: GOMAIL
+  version: "1.0"
+paths:
+  /send-email:
+    post:
+      description: Send email by HTML template
+      parameters:
+      - description: Type the cpf of the user who wants to get the benefits
+        in: query
+        name: doc
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Send email by HTML template
+      tags:
+      - Send email
+swagger: "2.0"

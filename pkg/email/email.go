@@ -10,7 +10,6 @@ import (
 )
 
 type MailMessage struct {
-	Params  []string `json:"params"`
 	To      []string `json:"to"`
 	Cc      []string `json:"cc"`
 	Subject string   `json:"subject"`
