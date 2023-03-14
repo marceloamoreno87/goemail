@@ -54,7 +54,7 @@ func Consume(config *Config, f func(message_body []byte)) {
 	forever := make(chan bool)
 	go func() {
 		for msg := range msgs {
-			f(msg.Body)
+			go f(msg.Body)
 			fmt.Printf("Received Message: %s\n", msg.Body)
 		}
 	}()

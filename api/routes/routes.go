@@ -8,9 +8,11 @@ import (
 
 func SetupRouter() *gin.Engine {
 	r := gin.Default()
+	EmailController := new(controllers.EmailController)
+
 	grp := r.Group("/api")
 	{
-		grp.POST("/send-email", controllers.SendEmail)
+		grp.POST("/mail", EmailController.Store)
 	}
 
 	return r

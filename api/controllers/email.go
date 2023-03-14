@@ -8,14 +8,16 @@ import (
 	"github.com/marceloamoreno87/gomail/pkg/rabbitmq"
 )
 
+type EmailController struct{}
+
 // SendEmail             godoc
 // @Summary      Send email by HTML template
 // @Description  Send email by HTML template
 // @Tags         Send email
 // @Param        doc  body  email.MailMessage  true  "query params"
 // @Produce      json
-// @Router       /send-email [post]
-func SendEmail(c *gin.Context) {
+// @Router       /mail [post]
+func (ctrl EmailController) Store(c *gin.Context) {
 
 	message := email.NewMailMessage()
 	c.ShouldBind(&message)
