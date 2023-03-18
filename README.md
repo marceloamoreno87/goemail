@@ -1,7 +1,7 @@
 # goemail
 
 
-localhost:8080/api/send-email
+localhost:8080/api/mail
 
 
 {
