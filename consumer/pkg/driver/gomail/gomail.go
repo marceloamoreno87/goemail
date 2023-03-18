@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/marceloamoreno87/gomail/consumer/pkg/email"
 	"gopkg.in/gomail.v2"
 )
 
@@ -40,17 +41,8 @@ func Send(from string, to []string, cc []string, subject string, body string, at
 
 	if !persist {
 		for _, attach := range attachment {
-			go DeleteFile(attach)
+			go email.DeleteAttachment(attach)
 		}
 	}
 
-}
-
-func DeleteFile(attachment *multipart.FileHeader) (err error) {
-	filepath := "/tmp/attachments/" + attachment.Filename
-	e := os.Remove(filepath)
-	if e != nil {
-		log.Fatal(e)
-	}
-	return
 }

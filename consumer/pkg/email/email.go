@@ -5,9 +5,11 @@ import (
 	"mime/multipart"
 	"os"
 
-	"github.com/marceloamoreno87/gomail/consumer/pkg/gomail"
-	"github.com/marceloamoreno87/gomail/consumer/pkg/sendgrid"
-	"github.com/marceloamoreno87/gomail/consumer/pkg/ses"
+	"github.com/marceloamoreno87/gomail/consumer/pkg/attachment/local"
+	"github.com/marceloamoreno87/gomail/consumer/pkg/attachment/s3"
+	"github.com/marceloamoreno87/gomail/consumer/pkg/driver/gomail"
+	"github.com/marceloamoreno87/gomail/consumer/pkg/driver/sendgrid"
+	"github.com/marceloamoreno87/gomail/consumer/pkg/driver/ses"
 )
 
 type MailMessage struct {
@@ -36,6 +38,17 @@ func Send(message_body []byte) {
 		ses.Send(mailmessage.GetFrom(), mailmessage.GetTo(), mailmessage.GetCc(), mailmessage.GetSubject(), mailmessage.GetBody(), mailmessage.GetAttachments())
 	default:
 		gomail.Send(mailmessage.GetFrom(), mailmessage.GetTo(), mailmessage.GetCc(), mailmessage.GetSubject(), mailmessage.GetBody(), mailmessage.GetAttachments())
+	}
+}
+
+func DeleteAttachment(attachment *multipart.FileHeader) {
+	switch os.Getenv("MAIL_DRIVER_ATTACHMENT") {
+	case "local":
+		local.Delete(attachment)
+	case "s3":
+		s3.Delete(attachment)
+	default:
+		local.Delete(attachment)
 	}
 }
 
