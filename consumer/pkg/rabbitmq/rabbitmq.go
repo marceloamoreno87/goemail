@@ -63,28 +63,6 @@ func Consume(config *Config, f func(message_body []byte)) {
 	<-forever
 }
 
-func Publish(json_data []byte) {
-
-	connection := getConnection()
-	channel := getChannel(connection)
-	config := GetConfig()
-	declareQueue(config, channel)
-
-	err := channel.Publish(
-		"",
-		"mail_messages",
-		false,
-		false,
-		amqp.Publishing{
-			ContentType: "application/json",
-			Body:        json_data,
-		},
-	)
-	if err != nil {
-		panic(err)
-	}
-}
-
 func getConnection() (connection *amqp.Connection) {
 	connection, err := amqp.Dial(os.Getenv("AMQP_SERVER_URL"))
 	if err != nil {

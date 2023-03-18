@@ -7,8 +7,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/marceloamoreno87/gomail/pkg/email"
-	"github.com/marceloamoreno87/gomail/pkg/rabbitmq"
+	"github.com/marceloamoreno87/gomail/publisher/pkg/email"
+	"github.com/marceloamoreno87/gomail/publisher/pkg/rabbitmq"
 )
 
 type EmailController struct{}

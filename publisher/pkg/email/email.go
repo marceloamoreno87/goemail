@@ -4,11 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"mime/multipart"
-	"os"
-
-	"github.com/marceloamoreno87/gomail/pkg/gomail"
-	"github.com/marceloamoreno87/gomail/pkg/sendgrid"
-	"github.com/marceloamoreno87/gomail/pkg/ses"
 )
 
 type MailMessage struct {
@@ -43,20 +38,6 @@ func (mailmessage *MailMessage) ValidateEmailMessage() error {
 		return errors.New("Campo subject está em branco!")
 	}
 	return nil
-}
-
-func Send(message_body []byte) {
-	mailmessage := setMailMessage(message_body)
-	switch os.Getenv("MAIL_DRIVER") {
-	case "gomail":
-		gomail.Send(mailmessage.GetFrom(), mailmessage.GetTo(), mailmessage.GetCc(), mailmessage.GetSubject(), mailmessage.GetBody(), mailmessage.GetAttachments())
-	case "sendgrid":
-		sendgrid.Send(mailmessage.GetFrom(), mailmessage.GetTo(), mailmessage.GetCc(), mailmessage.GetSubject(), mailmessage.GetBody(), mailmessage.GetAttachments())
-	case "ses":
-		ses.Send(mailmessage.GetFrom(), mailmessage.GetTo(), mailmessage.GetCc(), mailmessage.GetSubject(), mailmessage.GetBody(), mailmessage.GetAttachments())
-	default:
-		gomail.Send(mailmessage.GetFrom(), mailmessage.GetTo(), mailmessage.GetCc(), mailmessage.GetSubject(), mailmessage.GetBody(), mailmessage.GetAttachments())
-	}
 }
 
 func NewMailMessage() *MailMessage {

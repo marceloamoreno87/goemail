@@ -2,13 +2,12 @@ package email
 
 import (
 	"encoding/json"
-	"errors"
 	"mime/multipart"
 	"os"
 
-	"github.com/marceloamoreno87/gomail/pkg/gomail"
-	"github.com/marceloamoreno87/gomail/pkg/sendgrid"
-	"github.com/marceloamoreno87/gomail/pkg/ses"
+	"github.com/marceloamoreno87/gomail/consumer/pkg/gomail"
+	"github.com/marceloamoreno87/gomail/consumer/pkg/sendgrid"
+	"github.com/marceloamoreno87/gomail/consumer/pkg/ses"
 )
 
 type MailMessage struct {
@@ -24,25 +23,6 @@ func setMailMessage(message_body []byte) *MailMessage {
 	mailmessage := NewMailMessage()
 	json.Unmarshal(message_body, &mailmessage)
 	return mailmessage
-}
-
-func (mailmessage *MailMessage) ValidateEmailMessage() error {
-	if mailmessage.Body == "" {
-		return errors.New("Campo body está em branco!")
-	}
-	if mailmessage.From == "" {
-		return errors.New("Campo from está em branco!")
-	}
-	if mailmessage.To == nil {
-		return errors.New("Campo to está em branco!")
-	}
-	if mailmessage.Cc == nil {
-		return errors.New("Campo cc está em branco!")
-	}
-	if mailmessage.Subject == "" {
-		return errors.New("Campo subject está em branco!")
-	}
-	return nil
 }
 
 func Send(message_body []byte) {

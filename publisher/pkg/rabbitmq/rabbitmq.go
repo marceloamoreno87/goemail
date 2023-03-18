@@ -1,7 +1,6 @@
 package rabbitmq
 
 import (
-	"fmt"
 	"os"
 	"strconv"
 
@@ -39,28 +38,6 @@ func GetConfig() *Config {
 		Args:       nil,
 	}
 	return &config
-}
-
-func Consume(config *Config, f func(message_body []byte)) {
-
-	connection := getConnection()
-	channel := getChannel(connection)
-	declareQueue(config, channel)
-	msgs := getMessages(config, channel)
-
-	defer connection.Close()
-	defer channel.Close()
-
-	forever := make(chan bool)
-	go func() {
-		for msg := range msgs {
-			go f(msg.Body)
-			fmt.Printf("Received Message: %s\n", msg.Body)
-		}
-	}()
-
-	fmt.Println("Waiting for messages...")
-	<-forever
 }
 
 func Publish(json_data []byte) {
