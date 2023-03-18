@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/joho/godotenv"
-	"github.com/marceloamoreno87/gomail/pkg/email"
-	"github.com/marceloamoreno87/gomail/pkg/rabbitmq"
+	"github.com/marceloamoreno87/gomail/consumer/pkg/email"
+	"github.com/marceloamoreno87/gomail/consumer/pkg/rabbitmq"
 )
 
 func main() {

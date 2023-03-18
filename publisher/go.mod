@@ -1,4 +1,4 @@
-module github.com/marceloamoreno87/gomail
+module github.com/marceloamoreno87/gomail/publisher
 
 go 1.20
 

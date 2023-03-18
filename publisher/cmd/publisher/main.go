@@ -4,8 +4,8 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-	_ "github.com/marceloamoreno87/gomail/api/docs"
-	"github.com/marceloamoreno87/gomail/api/routes"
+	_ "github.com/marceloamoreno87/gomail/publisher/api/docs"
+	"github.com/marceloamoreno87/gomail/publisher/api/routes"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )

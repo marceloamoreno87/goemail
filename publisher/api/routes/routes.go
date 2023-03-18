@@ -3,7 +3,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/marceloamoreno87/gomail/api/controllers"
+	"github.com/marceloamoreno87/gomail/publisher/api/controllers"
 )
 
 func SetupRouter() *gin.Engine {
