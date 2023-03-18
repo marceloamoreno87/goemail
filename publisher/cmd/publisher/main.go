@@ -20,7 +20,7 @@ import (
 // @host      localhost:8080
 // @BasePath  /api
 func main() {
-	godotenv.Load()
+	godotenv.Load("../../.env")
 
 	r := routes.SetupRouter()
 	r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

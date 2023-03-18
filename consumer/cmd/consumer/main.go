@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	godotenv.Load()
+	godotenv.Load("../../.env")
 	config := rabbitmq.GetConfig()
 	rabbitmq.Consume(config, email.Send)
 }
