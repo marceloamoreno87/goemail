@@ -2,6 +2,7 @@ package ses
 
 import (
 	"log"
+	"mime/multipart"
 	"os"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -11,7 +12,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/ses"
 )
 
-func Send(from string, to []string, cc []string, subject string, body string) {
+func Send(from string, to []string, cc []string, subject string, body string, attachment []*multipart.FileHeader) {
 	email_template := generateSESTemplate(from, to, cc, subject, body)
 	sess, err := getSessionSES()
 	service := ses.New(sess)
