@@ -2,54 +2,21 @@ package email
 
 import (
 	"encoding/json"
-	"mime/multipart"
-	"os"
-
-	"github.com/marceloamoreno87/gomail/consumer/pkg/attachment/local"
-	"github.com/marceloamoreno87/gomail/consumer/pkg/attachment/s3"
-	"github.com/marceloamoreno87/gomail/consumer/pkg/driver/gomail"
-	"github.com/marceloamoreno87/gomail/consumer/pkg/driver/sendgrid"
-	"github.com/marceloamoreno87/gomail/consumer/pkg/driver/ses"
 )
 
 type MailMessage struct {
-	To          []string                `json:"to" form:"to" example:"test@test.com, test2@test2.com" binding:"required"`
-	Cc          []string                `json:"cc" form:"cc" example:"test@test.com, test2@test2.com"`
-	Subject     string                  `json:"subject" form:"subject" example:"testing" binding:"required"`
-	From        string                  `json:"from" form:"from" example:"marceloamoreno87@gmail.com" binding:"required"`
-	Body        string                  `json:"body" form:"body" example:"<h1>Hello, world!</h1>" binding:"required"`
-	Attachments []*multipart.FileHeader `json:"attachment,omitempty" form:"attachment"`
+	To          []string `json:"to[]" form:"to" example:"test@test.com, test2@test2.com" binding:"required"`
+	Cc          []string `json:"cc[]" form:"cc" example:"test@test.com, test2@test2.com"`
+	Attachments []string `json:"attachments[],omitempty" form:"attachments"`
+	Subject     string   `json:"subject" form:"subject" example:"testing" binding:"required"`
+	From        string   `json:"from" form:"from" example:"marceloamoreno87@gmail.com" binding:"required"`
+	Body        string   `json:"body" form:"body" example:"<h1>Hello, world!</h1>" binding:"required"`
 }
 
-func setMailMessage(message_body []byte) *MailMessage {
+func SetMailMessage(message_body []byte) *MailMessage {
 	mailmessage := NewMailMessage()
 	json.Unmarshal(message_body, &mailmessage)
 	return mailmessage
-}
-
-func Send(message_body []byte) {
-	mailmessage := setMailMessage(message_body)
-	switch os.Getenv("MAIL_DRIVER") {
-	case "gomail":
-		gomail.Send(mailmessage.GetFrom(), mailmessage.GetTo(), mailmessage.GetCc(), mailmessage.GetSubject(), mailmessage.GetBody(), mailmessage.GetAttachments())
-	case "sendgrid":
-		sendgrid.Send(mailmessage.GetFrom(), mailmessage.GetTo(), mailmessage.GetCc(), mailmessage.GetSubject(), mailmessage.GetBody(), mailmessage.GetAttachments())
-	case "ses":
-		ses.Send(mailmessage.GetFrom(), mailmessage.GetTo(), mailmessage.GetCc(), mailmessage.GetSubject(), mailmessage.GetBody(), mailmessage.GetAttachments())
-	default:
-		gomail.Send(mailmessage.GetFrom(), mailmessage.GetTo(), mailmessage.GetCc(), mailmessage.GetSubject(), mailmessage.GetBody(), mailmessage.GetAttachments())
-	}
-}
-
-func DeleteAttachment(attachment *multipart.FileHeader) {
-	switch os.Getenv("MAIL_DRIVER_ATTACHMENT") {
-	case "local":
-		local.Delete(attachment)
-	case "s3":
-		s3.Delete(attachment)
-	default:
-		local.Delete(attachment)
-	}
 }
 
 func NewMailMessage() *MailMessage {
@@ -76,7 +43,7 @@ func (mailmessage *MailMessage) GetBody() string {
 	return mailmessage.Body
 }
 
-func (mailmessage *MailMessage) GetAttachments() []*multipart.FileHeader {
+func (mailmessage *MailMessage) GetAttachments() []string {
 	return mailmessage.Attachments
 }
 
@@ -105,7 +72,7 @@ func (mailmessage *MailMessage) SetBody(Body string) *MailMessage {
 	return mailmessage
 }
 
-func (mailmessage *MailMessage) SetAttachments(Attachments []*multipart.FileHeader) *MailMessage {
+func (mailmessage *MailMessage) SetAttachments(Attachments []string) *MailMessage {
 	mailmessage.Attachments = Attachments
 	return mailmessage
 }

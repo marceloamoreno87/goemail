@@ -3,16 +3,15 @@ package email
 import (
 	"encoding/json"
 	"errors"
-	"mime/multipart"
 )
 
 type MailMessage struct {
-	To          []string                `json:"to" form:"to" example:"test@test.com, test2@test2.com" binding:"required"`
-	Cc          []string                `json:"cc" form:"cc" example:"test@test.com, test2@test2.com"`
-	Subject     string                  `json:"subject" form:"subject" example:"testing" binding:"required"`
-	From        string                  `json:"from" form:"from" example:"marceloamoreno87@gmail.com" binding:"required"`
-	Body        string                  `json:"body" form:"body" example:"<h1>Hello, world!</h1>" binding:"required"`
-	Attachments []*multipart.FileHeader `json:"attachment,omitempty" form:"attachment"`
+	To          []string `json:"to" form:"to" example:"test@test.com, test2@test2.com" binding:"required"`
+	Cc          []string `json:"cc" form:"cc" example:"test@test.com, test2@test2.com"`
+	Attachments []string `json:"attachments,omitempty" form:"attachments"`
+	Subject     string   `json:"subject" form:"subject" example:"testing" binding:"required"`
+	From        string   `json:"from" form:"from" example:"marceloamoreno87@gmail.com" binding:"required"`
+	Body        string   `json:"body" form:"body" example:"<h1>Hello, world!</h1>" binding:"required"`
 }
 
 func setMailMessage(message_body []byte) *MailMessage {
@@ -64,7 +63,7 @@ func (mailmessage *MailMessage) GetBody() string {
 	return mailmessage.Body
 }
 
-func (mailmessage *MailMessage) GetAttachments() []*multipart.FileHeader {
+func (mailmessage *MailMessage) GetAttachments() []string {
 	return mailmessage.Attachments
 }
 
@@ -93,7 +92,7 @@ func (mailmessage *MailMessage) SetBody(Body string) *MailMessage {
 	return mailmessage
 }
 
-func (mailmessage *MailMessage) SetAttachments(Attachments []*multipart.FileHeader) *MailMessage {
+func (mailmessage *MailMessage) SetAttachments(Attachments []string) *MailMessage {
 	mailmessage.Attachments = Attachments
 	return mailmessage
 }

@@ -2,15 +2,15 @@ package sendgrid
 
 import (
 	"log"
-	"mime/multipart"
 	"os"
 
-	"github.com/sendgrid/sendgrid-go"
+	"github.com/marceloamoreno87/gomail/consumer/pkg/email"
+	sendgrid "github.com/sendgrid/sendgrid-go"
 	"github.com/sendgrid/sendgrid-go/helpers/mail"
 )
 
-func Send(from string, to []string, cc []string, subject string, body string, attachment []*multipart.FileHeader) {
-	m := setMail(from, to, cc, subject, body)
+func Send(mailmessage *email.MailMessage) {
+	m := setMail(mailmessage.GetFrom(), mailmessage.GetTo(), mailmessage.GetCc(), mailmessage.GetSubject(), mailmessage.GetBody())
 	request := sendgrid.GetRequest(os.Getenv("SENDGRID_API_KEY"), "/v3/mail/send", "https://api.sendgrid.com")
 	request.Method = "POST"
 	request.Body = mail.GetRequestBody(m)

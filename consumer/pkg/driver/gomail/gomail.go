@@ -2,27 +2,22 @@ package gomail
 
 import (
 	"log"
-	"mime/multipart"
 	"os"
 	"strconv"
 
 	"github.com/marceloamoreno87/gomail/consumer/pkg/email"
-	"gopkg.in/gomail.v2"
+
+	gomail "gopkg.in/gomail.v2"
 )
 
-func Send(from string, to []string, cc []string, subject string, body string, attachment []*multipart.FileHeader) {
+func Send(mailmessage *email.MailMessage) {
 
 	mailer := gomail.NewMessage()
-	mailer.SetHeader("From", from)
-	mailer.SetHeader("To", to...)
-	mailer.SetHeader("Cc", cc...)
-	mailer.SetHeader("Subject", subject)
-	mailer.SetBody("text/html", body)
-
-	for _, attach := range attachment {
-		filepath := "/tmp/attachments/" + attach.Filename
-		mailer.Attach(filepath)
-	}
+	mailer.SetHeader("From", mailmessage.GetFrom())
+	mailer.SetHeader("To", mailmessage.GetTo()...)
+	mailer.SetHeader("Cc", mailmessage.GetCc()...)
+	mailer.SetHeader("Subject", mailmessage.GetSubject())
+	mailer.SetBody("text/html", mailmessage.GetBody())
 
 	port, _ := strconv.Atoi(os.Getenv("MAIL_PORT"))
 	dialer := gomail.NewDialer(
@@ -35,14 +30,6 @@ func Send(from string, to []string, cc []string, subject string, body string, at
 	err := dialer.DialAndSend(mailer)
 	if err != nil {
 		log.Fatal(err.Error())
-	}
-
-	persist, _ := strconv.ParseBool(os.Getenv("MAIL_ATTACHMENT_PERSIST"))
-
-	if !persist {
-		for _, attach := range attachment {
-			go email.DeleteAttachment(attach)
-		}
 	}
 
 }

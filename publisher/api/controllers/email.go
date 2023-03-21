@@ -2,11 +2,8 @@ package controllers
 
 import (
 	"encoding/json"
-	"mime/multipart"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"github.com/marceloamoreno87/gomail/publisher/pkg/email"
 	"github.com/marceloamoreno87/gomail/publisher/pkg/rabbitmq"
 )
@@ -30,8 +27,6 @@ func (ctrl EmailController) Store(c *gin.Context) {
 		return
 	}
 
-	SaveAttachments(c, message.GetAttachments())
-
 	json_data, err := json.Marshal(message)
 	if err != nil {
 		c.JSON(400, err.Error())
@@ -39,15 +34,4 @@ func (ctrl EmailController) Store(c *gin.Context) {
 	}
 	rabbitmq.Publish(json_data)
 	c.JSON(200, "Email enviado!")
-}
-
-func SaveAttachments(c *gin.Context, attachemnts []*multipart.FileHeader) {
-	for _, file := range attachemnts {
-		file.Filename = uuid.NewString() + "-" + file.Filename
-		filename := "/tmp/attachments/" + file.Filename
-		if err := c.SaveUploadedFile(file, filename); err != nil {
-			c.String(http.StatusBadRequest, "upload file err: %s", err.Error())
-			return
-		}
-	}
 }
